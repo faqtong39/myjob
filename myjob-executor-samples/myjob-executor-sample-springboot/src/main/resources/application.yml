@@ -1,0 +1,12 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: myjob-executor-sample-springboot
+
+
+myjob:
+  scheduler:
+    protocal: http
+    endpoint: ${MYJOB_SCHEDULER_ENDPOINT:192.168.3.27}:7001

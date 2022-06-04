@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>HOME</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <h1>Myjob scheduler admin</h1>
+</div>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><strong>Navigation</strong></a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="/executor">Executor</a></li>
+                <li class="active"><a href="/job">Job</a></li>
+                <li><a href="/log">Log</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container">
+    <div>
+        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Add</button>
+        <form role="form" method="post" enctype="multipart/form-data" action="/jobSubmit">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Add A New Job</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+
+                                <p style="color: #761c19; border: 5px"><strong>Basic Settings</strong></p>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-3">
+                                    <span>
+                                      <label for="executor">Executor * :</label>
+                                      <select class="form-control" id="executor" name="executor">
+                                        <option th:each="option:${executorGroups}" th:value="${option.value.appName}"
+                                                th:text="${option.value.appName}"></option>
+                                        </select>
+                                    </span>
+                                    </div>
+                                    <div class="col-xs-6 col-md-3">
+                                    <span>
+                                        <label for="jobDesc">Job Desc * :</label>
+                                        <input type="text" class="form-control" id="jobDesc" name="jobDesc"
+                                               placeholder="please type job desc">
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-3">
+                                    <span>
+                                        <label for="author">Author * :</label>
+                                        <input type="text" class="form-control" id="author" name="author"
+                                               placeholder="please type author">
+                                    </span>
+                                    </div>
+                                    <div class="col-xs-6 col-md-3">
+                                     <span>
+                                        <label for="email">Alarm Email * :</label>
+                                        <input type="text" class="form-control" id="email" name="email"
+                                               placeholder="split by comma for multiple emails">
+                                    </span>
+                                    </div>
+                                </div>
+                                <br/>
+                                <p style="color: #761c19; border: 5px"><strong>Schedule Settings</strong></p>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-3">
+                                    <span>
+                                      <label for="scheduleType">Schedule Type * :</label>
+                                      <select class="form-control" id="scheduleType" name="scheduleType">
+                                          <option value="0">Fixed time</option>
+                                          <!--<option value="1">Cron</option>-->
+                                        </select>
+                                    </span>
+                                    </div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <span>
+                                        <label for="cronValue">Second * :</label>
+                                        <input type="text" class="form-control" id="cronValue" name="cronValue"
+                                               placeholder="please type second ">
+                                        </span>
+                                    </div>
+                                </div>
+                                <br/>
+                                <p style="color: #761c19; border: 5px"><strong>Job Settings</strong></p>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-3">
+                                    <span>
+                                      <label for="sourceType">Source Type * :</label>
+                                      <select class="form-control" id="sourceType" name="sourceType">
+                                          <option value="0">Java</option>
+                                          <option value="1">Python</option>
+                                          <option value="2">NodeJs</option>
+                                          <option value="3">Rust</option>
+                                        </select>
+                                    </span>
+                                    </div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <span>
+                                        <label for="jobKey">Job Key * :</label>
+                                        <input type="text" class="form-control" id="jobKey" name="jobKey"
+                                               placeholder="please type job key ">
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-6">
+                                        <span>
+                                        <label for="jobParam">Job Parameters :</label>
+                                        <input type="text" class="form-control" id="jobParam" name="jobParam"
+                                               placeholder="please type job paramters ">
+                                        </span>
+                                    </div>
+                                </div>
+                                <br/>
+                                <p style="color: #761c19;  border: 5px"><strong>Advanced Settings</strong></p>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-3">
+                                    <span>
+                                      <label for="routeStrategy">Router strategy * :</label>
+                                      <select class="form-control" id="routeStrategy" name="routeStrategy">
+                                          <option value="0">Round Robin</option>
+                                          <option value="1">Random</option>
+                                        </select>
+                                    </span>
+                                    </div>
+                                    <div class="col-xs-6 col-md-3">
+                                    <span>
+                                      <label for="expireStrategy">Expire strategy * :</label>
+                                      <select class="form-control" id="expireStrategy" name="expireStrategy">
+                                          <option value="0">Ignore</option>
+                                          <option value="1">One Time Execution</option>
+                                        </select>
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-3">
+                                        <span>
+                                        <label for="timeout">Time Out(seconds) * :</label>
+                                        <input type="text" class="form-control" id="timeout" name="timeout"
+                                               placeholder="please type job time out ">
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-6 col-md-3">
+                                        <span>
+                                        <label for="retry">Retry times * :</label>
+                                        <input type="text" class="form-control" id="retry" name="retry"
+                                               placeholder="please type retry times">
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+
+                    </div><!-- /.modal-content -->
+
+                </div><!-- /.modal -->
+            </div>
+        </form>
+
+    </div>
+    <table class="table">
+        <caption>Jobs</caption>
+        <thead>
+        <tr>
+            <th>Group Name</th>
+            <th>Job Desc</th>
+            <th>Schedule Type</th>
+            <th>Route Strategy</th>
+            <th>Source Type</th>
+            <th>Author</th>
+            <th>Status</th>
+            <th>Operation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="job:${jobs}">
+            <td th:each="entry:${job}" th:text="${entry.value.executorGroup.appName}"></td>
+            <td th:each="entry:${job}" th:text="${entry.value.jobDesc}"></td>
+            <td th:each="entry:${job}">
+                <span th:if="${entry.value.scheduleType eq '0'}">Fixed Time: <span
+                        th:text="${entry.value.scheduleConf}"></span> seconds</span>
+            </td>
+            <td th:each="entry:${job}">
+                <span th:if="${entry.value.executorRouteStrategy eq '0'}">Round Robin</span>
+                <span th:if="${entry.value.executorRouteStrategy eq '1'}">Random</span>
+            </td>
+            <td th:each="entry:${job}">
+                <span th:if="${entry.value.sourceType eq '0'}">Java</span>
+                <span th:if="${entry.value.sourceType eq '1'}">Python</span>
+                <span th:if="${entry.value.sourceType eq '2'}">NodeJs</span>
+                <span th:if="${entry.value.sourceType eq '3'}">Rust</span>
+            </td>
+            <td th:each="entry:${job}" th:text="${entry.value.author}"></td>
+            <td th:each="entry:${job}">
+                <span th:if="${entry.value.triggerStatus eq 0}">Stop</span>
+                <span th:if="${entry.value.triggerStatus eq 1}">Running</span>
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+                        Operation
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#" th:each="entry:${job}"
+                               th:onclick="oneTimeExec([[${entry.value.executorGroup.appName}]],[[${entry.value.jobKey}]], [[${entry.value.jobParam}]], [[${entry.value.jobTimeout}]], [[${entry.value.jobFailRetryCount}]]);">One
+                                Time Execution</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">Next Trigger Time</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">Start</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">Stop</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">Edit</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">Copy</a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" href="#">Delete</a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <p>Myjob Footer</p>
+</div>
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function oneTimeExec(appName, jobKey, jobParam, timeout, retry) {
+        console.log(jobKey + " : " + jobParam)
+        $.post("/oneTimeExec", {
+            "appName": appName,
+            "jobKey": jobKey,
+            "jobParam": jobParam,
+            "timeout": timeout,
+            "retry": retry
+        }, function (data) {
+            alert(jobKey + " run successfully! Execution time is " + data);
+        })
+    }
+
+    /*]]>*/
+</script>
+</html>

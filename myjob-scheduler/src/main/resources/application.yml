@@ -1,0 +1,12 @@
+server:
+  port: 7001
+
+spring:
+  application:
+    name: myjob-scheduler
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/pages/
+    suffix: .html
