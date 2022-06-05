@@ -9,4 +9,4 @@ spring:
 myjob:
   scheduler:
     protocal: http
-    endpoint: ${MYJOB_SCHEDULER_ENDPOINT:192.168.3.27}:7001
+    endpoint: ${MYJOB_SCHEDULER_ENDPOINT:192.168.3.27:7001}

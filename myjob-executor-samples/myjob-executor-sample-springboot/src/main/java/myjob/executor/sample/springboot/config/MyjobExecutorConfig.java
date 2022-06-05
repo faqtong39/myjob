@@ -56,7 +56,7 @@ public class MyjobExecutorConfig implements InitializingBean, DisposableBean {
             String registryRequest = Base64.encode(request);
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("request", registryRequest);
-
+            log.info("myjob schedulor endpoint : {}", myjobSchedulorEndpoint);
             String result = HttpUtil.post(myjobSchedulorProtocal + "://" + myjobSchedulorEndpoint + "/api/registry", paramMap);
             log.info("Registry {} ...", result);
 
