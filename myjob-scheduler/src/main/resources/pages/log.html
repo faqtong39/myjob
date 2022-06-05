@@ -63,4 +63,19 @@
     <p>Myjob Footer</p>
 </div>
 </body>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function () {
+        setInterval(function () {
+            refresh();
+        }, 5000);
+    });
+
+    function refresh() {
+        window.location.href = "/log";
+    };
+
+    /*]]>*/
+</script>
 </html>

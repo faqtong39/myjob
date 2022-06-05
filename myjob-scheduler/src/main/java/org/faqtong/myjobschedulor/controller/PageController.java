@@ -1,25 +1,19 @@
 package org.faqtong.myjobschedulor.controller;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.faqtong.myjobschedulor.enums.TriggerStatus;
 import org.faqtong.myjobschedulor.form.JobForm;
 import org.faqtong.myjobschedulor.mockdata.MockData;
-import org.faqtong.myjobschedulor.model.Executor;
 import org.faqtong.myjobschedulor.model.ExecutorGroup;
 import org.faqtong.myjobschedulor.model.Job;
-import org.faqtong.myjobschedulor.model.Log;
+import org.faqtong.myjobschedulor.utils.JobUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Index
@@ -82,68 +76,27 @@ public class PageController {
         return "job";
     }
 
+    @PostMapping("/start")
+    @ResponseBody
+    public String start(String code, ModelMap map) {
+        MockData.jobMap.get(code).setTriggerStatus(TriggerStatus.Start.value());
+        return "SUCCESS";
+    }
+
+    @PostMapping("/stop")
+    @ResponseBody
+    public String stop(String code, ModelMap map) {
+        MockData.jobMap.get(code).setTriggerStatus(TriggerStatus.Stop.value());
+        return "SUCCESS";
+    }
+
     @PostMapping("/oneTimeExec")
     @ResponseBody
-    public String oneTimeExec(String appName, String jobKey, String jobParam, int timeout, int retry, ModelMap map) {
+    public String oneTimeExec(String appName, String jobCode, String jobKey, String jobParam, int timeout, int retry, ModelMap map) {
         log.info("jobKey: {}", jobKey);
         log.info("jobParam: {}", jobParam);
-        ExecutorGroup executorGroup = MockData.executorGroupMap.get(appName);
-        // TODO: select one executor depends on route strategy
-        Executor executor = executorGroup.getExecutorList().get(0);
 
-        // //request template: jobKey|jobParam|timeout|retryTimes
-        String request = jobKey + "|" + jobParam;
-
-        log.info("job execution request: {}", request);
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("request", Base64.encode(request));
-
-        //TODO: implement timeout and retry logic simply here
-        String result = "";
-        int execCnt = 0;
-        String triggerTime = DateUtil.format(DateUtil.date(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss.SSS");
-        for (int i = 0; i < retry; i++) {
-            execCnt = i + 1;
-            try {
-                result = HttpRequest.post("http://" + executor.getAddress() + "/myjob")
-                        .form(paramMap)
-                        .timeout(timeout * 1000)
-                        .execute().body();
-            } catch (Exception e) {
-                Log log = new Log();
-                log.setJobCode(jobKey);
-                log.setExecutorGroupCode(executorGroup.getAppName());
-                log.setTriggerTime(triggerTime);
-                log.setTriggerCode("Success");
-                log.setTriggerMsg(jobKey + " is triggered " + execCnt + " times");
-                log.setExecutionTime(DateUtil.format(DateUtil.date(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss.SSS"));
-                log.setExecutionCode("Fail");
-                log.setExecutionMsg(e.getMessage());
-                MockData.logList.add(log);
-
-                result = "FAIL";
-            }
-
-            if (result.toUpperCase().contains("SUCCESS")) {
-                break;
-            } else {
-                //TODO: Alarm mail logic
-            }
-        }
-
-        // log here
-        Log log = new Log();
-        log.setJobCode(jobKey);
-        log.setExecutorGroupCode(executorGroup.getAppName());
-        log.setTriggerTime(triggerTime);
-        log.setTriggerCode("Success");
-        log.setTriggerMsg("Triggered " + execCnt + " times");
-        log.setExecutionTime(DateUtil.format(DateUtil.date(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss.SSS"));
-        log.setExecutionCode("Success");
-        log.setExecutionMsg("Success");
-        MockData.logList.add(log);
-
-        return result;
+        return JobUtil.execute(appName, jobCode, jobKey, jobParam, timeout, retry);
     }
 
     @GetMapping("/log")
@@ -152,5 +105,10 @@ public class PageController {
         return "log";
     }
 
-
+//    public static void main(String[] args) {
+//        String triggerTime = DateUtil.format(DateUtil.date(System.currentTimeMillis()), "yyyy-MM-dd HH:mm:ss.SSS");
+//        System.out.println(triggerTime);
+//        System.out.println(DateUtil.offsetSecond(DateUtil.parseDateTime(triggerTime), 10));
+//        System.out.println(DateUtil.formatDateTime(DateUtil.offsetSecond(DateUtil.parseDateTime(triggerTime), 10)));
+//    }
 }

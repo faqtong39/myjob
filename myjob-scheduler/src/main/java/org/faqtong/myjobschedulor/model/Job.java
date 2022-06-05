@@ -29,7 +29,7 @@ public class Job {
     private Integer jobFailRetryCount;
     private String sourceType;
     private Integer triggerStatus;
-    private Long triggerLastTime;
-    private Long triggerNextTime;
+    private String triggerLastTime;
+    private String triggerNextTime;
     private ExecutorGroup executorGroup;
 }

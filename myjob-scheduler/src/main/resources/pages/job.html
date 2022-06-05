@@ -225,9 +225,9 @@
                 <span th:if="${entry.value.sourceType eq '3'}">Rust</span>
             </td>
             <td th:each="entry:${job}" th:text="${entry.value.author}"></td>
-            <td th:each="entry:${job}">
+            <td th:each="entry:${job}" th:id="${entry.value.code}+'Status'">
                 <span th:if="${entry.value.triggerStatus eq 0}">Stop</span>
-                <span th:if="${entry.value.triggerStatus eq 1}">Running</span>
+                <span th:if="${entry.value.triggerStatus eq 1}">Start</span>
             </td>
             <td>
                 <div class="dropdown">
@@ -238,26 +238,28 @@
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                         <li role="presentation">
                             <a role="menuitem" tabindex="-1" href="#" th:each="entry:${job}"
-                               th:onclick="oneTimeExec([[${entry.value.executorGroup.appName}]],[[${entry.value.jobKey}]], [[${entry.value.jobParam}]], [[${entry.value.jobTimeout}]], [[${entry.value.jobFailRetryCount}]]);">One
+                               th:onclick="oneTimeExec([[${entry.value.code}]],[[${entry.value.executorGroup.appName}]],[[${entry.value.jobKey}]], [[${entry.value.jobParam}]], [[${entry.value.jobTimeout}]], [[${entry.value.jobFailRetryCount}]]);">One
                                 Time Execution</a>
                         </li>
                         <li role="presentation">
                             <a role="menuitem" tabindex="-1" href="#">Next Trigger Time</a>
                         </li>
                         <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#">Start</a>
+                            <a role="menuitem" tabindex="-1" href="#" th:each="entry:${job}"
+                               th:onclick="start([[${entry.value.code}]],[[${entry.value.jobKey}]]);">Start</a>
                         </li>
                         <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#">Stop</a>
+                            <a role="menuitem" tabindex="-1" href="#" th:each="entry:${job}"
+                               th:onclick="stop([[${entry.value.code}]],[[${entry.value.jobKey}]]);">Stop</a>
                         </li>
                         <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#">Edit</a>
+                            <a role="menuitem" tabindex="-1" href="#" onclick="alert('TODO:')">Edit</a>
                         </li>
                         <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#">Copy</a>
+                            <a role="menuitem" tabindex="-1" href="#" onclick="alert('TODO:')">Copy</a>
                         </li>
                         <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#">Delete</a>
+                            <a role="menuitem" tabindex="-1" href="#" onclick="alert('TODO:')">Delete</a>
                         </li>
                     </ul>
                 </div>
@@ -274,9 +276,10 @@
 </body>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    function oneTimeExec(appName, jobKey, jobParam, timeout, retry) {
+    function oneTimeExec(jobCode, appName, jobKey, jobParam, timeout, retry) {
         console.log(jobKey + " : " + jobParam)
         $.post("/oneTimeExec", {
+            "jobCode": jobCode,
             "appName": appName,
             "jobKey": jobKey,
             "jobParam": jobParam,
@@ -284,6 +287,28 @@
             "retry": retry
         }, function (data) {
             alert(jobKey + " is exeucted successfully!");
+        })
+    }
+
+    function start(code, jobKey) {
+        console.log("job code : " + code);
+        $.post("/start", {
+            "code": code
+        }, function (data) {
+            alert(jobKey + " is started!");
+            var status = "#" + code + "Status";
+            $(status).html("Start");
+        })
+    }
+
+    function stop(code, jobKey) {
+        console.log("job code : " + code);
+        $.post("/stop", {
+            "code": code
+        }, function (data) {
+            alert(jobKey + " is stopped!");
+            var status = "#" + code + "Status";
+            $(status).html("Stop");
         })
     }
 

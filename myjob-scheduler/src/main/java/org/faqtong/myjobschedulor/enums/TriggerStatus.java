@@ -9,7 +9,7 @@ package org.faqtong.myjobschedulor.enums;
  */
 public enum TriggerStatus {
 
-    Stop(0), Running(1);
+    Stop(0), Start(1);
 
     private int value;
 
