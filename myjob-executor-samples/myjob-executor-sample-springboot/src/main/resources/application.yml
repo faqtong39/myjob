@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: myjob-executor-sample-springboot
+    name: ${APP_NAME:myjob-executor-sample-springboot}
 
 
 myjob:

@@ -1,7 +1,7 @@
 package myjob.executor.sample.springboot.job;
 
-import cn.hutool.core.date.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class JobDemo01 implements BaseJob {
 
+    @Value("${spring.application.name}")
+    private String appName;
+
     @Override
     public Object execute(Object params) {
 
@@ -24,8 +27,8 @@ public class JobDemo01 implements BaseJob {
             e.printStackTrace();
         }
 
-        log.info("***** JobDemo01 with paramters[{}] is running........", params);
+        log.info("***** JobDemo01 with paramters[{}] is running in executor group named {} ........", params, appName);
 
-        return DateUtil.now();
+        return "SUCCESS";
     }
 }

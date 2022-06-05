@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class JobController {
 
     @PostMapping
-    public String executeJob(String request) {//request template: jobKey|jobParam|timeout|retryTimes
+    public String executeJob(String request) {//request template: jobKey|jobParam
         Assert.notNull(request, "Execution request is required");
         request = Base64.decodeStr(request);
         log.info(request);
         String[] array = request.split("\\|");
         BaseJob job = (BaseJob) SpringContextUtils.getBean(array[0]);
-
-        return (String) job.execute(array[1]);
+        String param = array.length == 2 ? array[1] : null;
+        return (String) job.execute(param);
     }
 }

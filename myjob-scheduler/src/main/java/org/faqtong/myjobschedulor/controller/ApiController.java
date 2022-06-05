@@ -9,7 +9,6 @@ import org.faqtong.myjobschedulor.enums.Result;
 import org.faqtong.myjobschedulor.mockdata.MockData;
 import org.faqtong.myjobschedulor.model.Executor;
 import org.faqtong.myjobschedulor.model.ExecutorGroup;
-import org.faqtong.myjobschedulor.model.Log;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,16 +68,4 @@ public class ApiController {
         return Result.Success.value();
     }
 
-    @PostMapping("/executionLog")
-    public String executionLog(String request) { // request template: executor_group_code|job_code|trigger_time|execution_time|execution_code|execution_msg
-        Assert.notNull(request, "Execution log request is required");
-        request = Base64.decodeStr(request);
-        String[] array = request.split("\\|");
-        Log log = MockData.logMap.get(array[0] + "." + array[1] + "." + array[2]);
-        log.setExecutionTime(array[3]);
-        log.setExecutionCode(array[4]);
-        log.setExecutionMsg(array[5]);
-
-        return log.toString();
-    }
 }

@@ -36,7 +36,27 @@
 </nav>
 
 <div class="container">
-    Log
+    <table class="table">
+        <caption>Logs</caption>
+        <thead>
+        <tr>
+            <th>Executor Group</th>
+            <th>Trigger Time</th>
+            <th>Trigger Result</th>
+            <th>Execute Time</th>
+            <th>Execute Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="log:${logs}">
+            <td th:text="${log.executorGroupCode}"></td>
+            <td th:text="${log.triggerTime}"></td>
+            <td th:text="${log.triggerMsg}"></td>
+            <td th:text="${log.executionTime}"></td>
+            <td th:text="${log.executionMsg}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <div class="jumbotron text-center" style="margin-bottom:0">

@@ -4,6 +4,8 @@ import org.faqtong.myjobschedulor.model.ExecutorGroup;
 import org.faqtong.myjobschedulor.model.Job;
 import org.faqtong.myjobschedulor.model.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,11 +20,11 @@ public class MockData {
 
     public static Map<String, ExecutorGroup> executorGroupMap = null;
     public static Map<String, Job> jobMap = null;
-    public static Map<String, Log> logMap = null;
+    public static List<Log> logList = null;
 
     public void init() {
         executorGroupMap = new TreeMap<>();
         jobMap = new TreeMap<>();
-        logMap = new TreeMap<>();
+        logList = new ArrayList<>();
     }
 }
