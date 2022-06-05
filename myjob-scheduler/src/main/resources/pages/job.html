@@ -215,8 +215,8 @@
                         th:text="${entry.value.scheduleConf}"></span> seconds</span>
             </td>
             <td th:each="entry:${job}">
-                <span th:if="${entry.value.executorRouteStrategy eq '0'}">Round Robin</span>
                 <span th:if="${entry.value.executorRouteStrategy eq '1'}">Random</span>
+                <!--<span th:if="${entry.value.executorRouteStrategy eq '0'}">Round Robin</span>-->
             </td>
             <td th:each="entry:${job}">
                 <span th:if="${entry.value.sourceType eq '0'}">Java</span>

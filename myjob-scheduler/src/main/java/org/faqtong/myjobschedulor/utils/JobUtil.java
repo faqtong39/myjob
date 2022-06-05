@@ -2,6 +2,7 @@ package org.faqtong.myjobschedulor.utils;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.faqtong.myjobschedulor.mockdata.MockData;
@@ -25,8 +26,9 @@ public class JobUtil {
 
     public static String execute(String appName, String jobCode, String jobKey, String jobParam, int timeout, int retry) {
         ExecutorGroup executorGroup = MockData.executorGroupMap.get(appName);
-        // TODO: select one executor depends on route strategy
-        Executor executor = executorGroup.getExecutorList().get(0);
+        // TODO: select one executor depends on route strategy, simple random
+        Executor executor = executorGroup.getExecutorList().get(RandomUtil.randomInt(0,
+                executorGroup.getExecutorList().size()));
 
         // //request template: jobKey|jobParam
         String request = jobKey + "|" + jobParam;
